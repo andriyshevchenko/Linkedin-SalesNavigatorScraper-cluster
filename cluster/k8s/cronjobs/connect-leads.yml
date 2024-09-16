@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: connect-leads-cronjob
+spec:
+  schedule: "0 0 * * 1"  # Modify this to your cron schedule (e.g., every day at midnight)
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: connect-leads-cronjob-container
+              image: <your-container-image>  # Replace with your container image
+              env:
+                - name: ENV_FUNCTION_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-salesnavigatorscraper-secret
+                      key: ENV_FUNCTION_NAME
+                - name: ENV_MAX_ALLOWED_CONNECTION_REQUESTS
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-salesnavigatorscraper-secret
+                      key: ENV_MAX_ALLOWED_CONNECTION_REQUESTS
+                - name: ENV_SQL_CONNECTION_LEADS_DB_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-salesnavigatorscraper-secret
+                      key: ENV_SQL_CONNECTION_LEADS_DB_HOST
+                - name: ENV_SQL_CONNECTION_LEADS_DB_PORT
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-salesnavigatorscraper-secret
+                      key: ENV_SQL_CONNECTION_LEADS_DB_PORT
+                - name: ENV_SQL_CONNECTION_LEADS_DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-salesnavigatorscraper-secret
+                      key: ENV_SQL_CONNECTION_LEADS_DB_NAME
+                - name: ENV_SQL_CONNECTION_LEADS_DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-salesnavigatorscraper-secret
+                      key: ENV_SQL_CONNECTION_LEADS_DB_USER
+                - name: ENV_SQL_CONNECTION_LEADS_DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-salesnavigatorscraper-secret
+                      key: ENV_SQL_CONNECTION_LEADS_DB_PASSWORD
+                - name: ENV_TELEGRAM_BOT_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-salesnavigatorscraper-secret
+                      key: ENV_TELEGRAM_BOT_TOKEN
+                - name: ENV_TELEGRAM_CHAT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: linkedin-salesnavigatorscraper-secret
+                      key: ENV_TELEGRAM_CHAT_ID
+          restartPolicy: OnFailure
+      backoffLimit: 4
